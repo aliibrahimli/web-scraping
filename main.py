@@ -4,11 +4,13 @@ import selectorlib
 import smtplib
 import ssl
 
+
+"INSERT INTO events VALUES ('Tigers', 'Tiger City', '2088.10.14')"
 URL = "https://programmer100.pythonanywhere.com/tours/"
 
 
 def scrape(url):
-    """Scrappe the page source from the URL"""
+    """Scrape the page source from the URL"""
 
     response = requests.get(url)
     source = response.text
@@ -34,21 +36,25 @@ def send_email(message):
     with smtplib.SMTP_SSL(host, port, context=context) as server:
         server.login(username, password)
         server.sendmail(username, receiver, message)
+
+
 def store(extracted):
     with open("data.txt", 'a') as file:
         file.write(extracted + "\n")
 
 
-def read(extracted):
+def read():
     with open("data.txt", 'r') as file:
         return file.read()
+
+
 if __name__ == "__main__":
     while True:
         scraped = scrape(URL)
         extracted = extract(scraped)
         print(extracted)
 
-        content = read(extracted)
+        content = read()
         if extracted != "No upcoming tours":
             if extracted not in content:
                 store(extracted)
